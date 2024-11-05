@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './User.css';
+import Navbar from '../Navbar/Navbar';
 
 
 const User = () => {
@@ -50,6 +51,9 @@ const User = () => {
   };
 
   return (
+    <>
+    <Navbar/>
+
     <div className="user-page">
       <h1 className="user-page-title">User Management</h1>
       
@@ -134,6 +138,7 @@ const User = () => {
         </div>
       )}
     </div>
+    </>
   );
 };
 
