@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './User.css';
 
+
 const User = () => {
   const [modal, setModal] = useState(null);
   const [userDetails, setUserDetails] = useState({ name: '', email: '', id: '' });
@@ -22,7 +23,7 @@ const User = () => {
   const handleFormSubmit = (e) => {
     e.preventDefault();
 
-    if (modal === 'Add User' || modal === 'Create User') {
+    if (modal === 'Add User') {
       const newUser = {
         id: users.length + 1, // Generate a simple ID for demo purposes
         name: userDetails.name,
@@ -30,7 +31,19 @@ const User = () => {
       };
       setUsers([...users, newUser]); // Add new user to the users array
     } else if (modal === 'Delete User') {
-      setUsers(users.filter((user) => user.id !== parseInt(userDetails.id)));
+      const userId = parseInt(userDetails.id);
+      if (!isNaN(userId)) {
+        setUsers(users.filter((user) => user.id !== userId));
+      }
+    } else if (modal === 'Update User') {
+      const userId = parseInt(userDetails.id);
+      if (!isNaN(userId)) {
+        setUsers(users.map((user) => 
+          user.id === userId 
+            ? { ...user, name: userDetails.name, email: userDetails.email } 
+            : user
+        ));
+      }
     }
 
     handleCloseModal();
@@ -42,7 +55,6 @@ const User = () => {
       
       <div className="user-actions">
         <button className="user-action-button" onClick={() => setModal('Add User')}>Add User</button>
-        <button className="user-action-button" onClick={() => setModal('Create User')}>Create User</button>
         <button className="user-action-button" onClick={() => setModal('Delete User')}>Delete User</button>
         <button className="user-action-button" onClick={() => setModal('Update User')}>Update User</button>
       </div>
@@ -69,8 +81,20 @@ const User = () => {
           <div className="modal-content">
             <h2>{modal}</h2>
             <form onSubmit={handleFormSubmit}>
-              {modal !== 'Delete User' && (
+              {(modal === 'Add User' || modal === 'Update User') && (
                 <>
+                  {modal === 'Update User' && (
+                    <>
+                      <label>User ID:</label>
+                      <input
+                        type="text"
+                        name="id"
+                        value={userDetails.id}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </>
+                  )}
                   <label>Name:</label>
                   <input
                     type="text"
@@ -112,5 +136,6 @@ const User = () => {
     </div>
   );
 };
+
 
 export default User;
